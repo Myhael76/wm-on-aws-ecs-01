@@ -15,5 +15,33 @@
     "../../run-configurations/terraform-01/docker-compose.yml"
   ],
   "service": "aws-tf-01",
-  "shutdownAction": "none"
+  "shutdownAction": "none",
+  "customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"editor.formatOnSave": true,
+				"files.insertFinalNewline": true
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"hashicorp.terraform",
+        "adamibs.terraform-live-graph",
+        "amazonwebservices.aws-toolkit-vscode",
+        "bridgecrew.checkov",
+        "dotenv.dotenv-vscode",
+        "fchieze.terraformer",
+        "hashicorp.hcl",
+        "necatiarslan.aws-access-vscode-extension",
+        "oderwat.indent-rainbow",
+        "oferkafry.easy-terraform-commands",
+        "sebastianbille.iam-legend",
+        "tylerharris.terraform-link-docs",
+        "vitabletech.snippetmaster",
+        "winebarrel.tfstate-show",
+        "z.z"
+			]
+		}
+	}
 }
