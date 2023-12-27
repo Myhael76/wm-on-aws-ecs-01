@@ -42,3 +42,5 @@ You must be able to run docker compose.
 #### 2023-12-27
 
 - **13:22** - managed to spin up the first devcontainer. The trial from [tecracer proposal](https://www.tecracer.com/blog/2021/10/testing-terraform-with-inspec-part-2.html) did not work as expected. Fell back on a manual change of the original proposal.
+- **16:00** - Trying to understand the options and to decide on how to store AWS connection credentials
+  - the simplest way is to set the env vars according to the [official docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build). This seems to be enough for the current purpose, more articulated solutions are likely to be necessary for production environments
