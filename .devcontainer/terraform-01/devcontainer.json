@@ -1,0 +1,19 @@
+{
+  "name": "Terraform for AWS devcontainer 01",
+
+  // Sets the run context to 2 level up instead of the devcontainer2/.devcontainer folder.
+  //"context": "./build",
+
+  // use the second container file.
+  //"dockerFile": "./build/Dockerfile",
+
+  // When dev container is opened, below folder will be in workspace
+  //"workspaceMount": "source=${localWorkspaceFolder}/sub-folder,target=/workspace,type=bind",
+  
+  "workspaceFolder": "/workspace/aws-tf-01",
+  "dockerComposeFile": [
+    "../../run-configurations/terraform-01/docker-compose.yml"
+  ],
+  "service": "aws-tf-01",
+  "shutdownAction": "none"
+}

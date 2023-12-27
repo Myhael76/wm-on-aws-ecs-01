@@ -35,3 +35,10 @@ You must be able to run docker compose.
     - What is the equivalent of a Resource Group in AWS?
     - Research on AWS capabilities is somehow vast, maybe we can skip it?
 
+## Log
+
+### Creating devcontainer configuration for Terraform for AWS
+
+#### 2023-12-27
+
+- **13:22** - managed to spin up the first devcontainer. The trial from [tecracer proposal](https://www.tecracer.com/blog/2021/10/testing-terraform-with-inspec-part-2.html) did not work as expected. Fell back on a manual change of the original proposal.
