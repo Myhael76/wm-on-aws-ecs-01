@@ -1,5 +1,5 @@
 {
-  "name": "Terraform for AWS devcontainer 01",
+  "name": "aws-tf-01",
 
   // Sets the run context to 2 level up instead of the devcontainer2/.devcontainer folder.
   //"context": "./build",
@@ -10,7 +10,8 @@
   // When dev container is opened, below folder will be in workspace
   //"workspaceMount": "source=${localWorkspaceFolder}/sub-folder,target=/workspace,type=bind",
   
-  "workspaceFolder": "/workspace/aws-tf-01",
+  //"workspaceFolder": "/workspace/aws-tf-01",
+  "workspaceFolder": "/workspace",
   "dockerComposeFile": [
     "../../run-configurations/terraform-01/docker-compose.yml"
   ],
@@ -33,14 +34,16 @@
         "dotenv.dotenv-vscode",
         "fchieze.terraformer",
         "hashicorp.hcl",
+        "ms-azuretools.vscode-docker",
         "necatiarslan.aws-access-vscode-extension",
         "oderwat.indent-rainbow",
         "oferkafry.easy-terraform-commands",
         "sebastianbille.iam-legend",
+        "tfsec.tfsec",
+        "trunk.io",
         "tylerharris.terraform-link-docs",
         "vitabletech.snippetmaster",
-        "winebarrel.tfstate-show",
-        "z.z"
+        "winebarrel.tfstate-show"
 			]
 		}
 	}

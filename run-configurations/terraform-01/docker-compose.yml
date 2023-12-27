@@ -4,5 +4,6 @@ services:
   aws-tf-01:
     build: ./build
     volumes:
-      - ../../code/aws-tf-01/:/workspace/aws-tf-01/
+      - ../../code/:/workspace/
+      #- ../../:/workspace/
     entrypoint: "tail -f /dev/null"

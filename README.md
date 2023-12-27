@@ -43,4 +43,7 @@ You must be able to run docker compose.
 
 - **13:22** - managed to spin up the first devcontainer. The trial from [tecracer proposal](https://www.tecracer.com/blog/2021/10/testing-terraform-with-inspec-part-2.html) did not work as expected. Fell back on a manual change of the original proposal.
 - **16:00** - Trying to understand the options and to decide on how to store AWS connection credentials
-  - the simplest way is to set the env vars according to the [official docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build). This seems to be enough for the current purpose, more articulated solutions are likely to be necessary for production environments
+  - the simplest way is to set the environment variables according to the [official docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build). This seems to be enough for the current purpose, more articulated solutions are likely to be necessary for production environments
+- **18:00** - Playing around with VPCs and subnets. Checkov works, it recommends the VPC to have a security group that denies all traffic
+- **20:50** - Finished debugging the checkov extension. I was misled by the "Prisma" notes and tried the token syntax for that one, but in reality I only needed to add the naked token and leave the Prisma API url empty.
+- Now I need to understand how to manage the terraform state
