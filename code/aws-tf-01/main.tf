@@ -8,11 +8,6 @@ terraform {
   required_version = ">= 1.6"
 }
 
-variable "our_resource_group_name" {
-  type    = string
-  default = "rg4pj-aws-tf-01"
-}
-
 # Configure the AWS Provider
 provider "aws" {
   alias  = "aws-frankfurt"
