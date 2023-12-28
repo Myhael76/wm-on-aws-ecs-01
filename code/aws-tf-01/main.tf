@@ -55,6 +55,11 @@ resource "aws_flow_log" "vpc-01-flow-log" {
   log_destination = aws_cloudwatch_log_group.our_cloudwatch_log_group.arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.service-vpc-01.id
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_main_flow_log"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
 
 resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
@@ -62,12 +67,22 @@ resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
   name = "our_cloudwatch_log_group"
   #kms_key_id        = aws_kms_key.our_kms_key.id
   retention_in_days = 5
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_cw_log_group"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
 
 resource "aws_iam_role" "our_log_iam_role" {
   name                = "our_log_iam_role"
   assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
   managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_main_log_iam_rule"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
 
 data "aws_iam_policy" "log_policy" {
