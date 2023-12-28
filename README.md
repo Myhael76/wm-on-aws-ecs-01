@@ -47,3 +47,12 @@ You must be able to run docker compose.
 - **18:00** - Playing around with VPCs and subnets. Checkov works, it recommends the VPC to have a security group that denies all traffic
 - **20:50** - Finished debugging the checkov extension. I was misled by the "Prisma" notes and tried the token syntax for that one, but in reality I only needed to add the naked token and leave the Prisma API url empty.
 - Now I need to understand how to manage the terraform state
+
+
+#### 2023-12-28
+
+- Struggled with Terraform errors that were not clear. There is some cognitive ramp up in the domain
+- Resource explorer does not show VPCs (??). They are visible from the root exploration for services, look for VPC
+- Now adding tags. It seems it is important to work with tags in AWS, otherwise it is difficult to find resources.
+  - Also learning how to concatenate strings...
+  - Also learning how to inspect what we did from aws cli

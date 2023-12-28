@@ -8,6 +8,11 @@ terraform {
   required_version = ">= 1.6"
 }
 
+variable "our_resource_group_name" {
+  type    = string
+  default = "aws-tf-01"
+}
+
 # Configure the AWS Provider
 provider "aws" {
   alias  = "aws-frankfurt"
@@ -17,11 +22,22 @@ provider "aws" {
 # Service VPC 01
 resource "aws_vpc" "service-vpc-01" {
   cidr_block = "10.0.0.0/16"
+
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_main_vpc"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
 
 resource "aws_subnet" "service-vpc-01-subnet-01" {
   vpc_id     = aws_vpc.service-vpc-01.id
   cidr_block = "10.0.1.0/24"
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_main_vpc_subnet"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
 
 # ############### CloudWatch logging
