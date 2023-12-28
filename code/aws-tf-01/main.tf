@@ -10,7 +10,7 @@ terraform {
 
 variable "our_resource_group_name" {
   type    = string
-  default = "aws-tf-01"
+  default = "rg4pj-aws-tf-01"
 }
 
 # Configure the AWS Provider
@@ -112,6 +112,32 @@ resource "aws_default_security_group" "aws-tf-01-sg" {
     project                 = "aws-tf-01"
     name                    = "${var.our_resource_group_name}_main_vpc_security_group"
     our_resource_group_name = var.our_resource_group_name
+  }
+}
+
+############### Resource Group
+
+resource "aws_resourcegroups_group" "our_resource_group" {
+  name = var.our_resource_group_name
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_resource_group"
+    our_resource_group_name = var.our_resource_group_name
+  }
+  resource_query {
+    query = <<JSON
+{
+  "ResourceTypeFilters": [
+    "AWS::AllSupported"
+  ],
+  "TagFilters": [
+    {
+      "Key": "our_resource_group_name",
+      "Values": ["${var.our_resource_group_name}"]
+    }
+  ]
+}
+JSON
   }
 }
 
