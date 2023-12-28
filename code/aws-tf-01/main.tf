@@ -10,6 +10,7 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
+  alias  = "aws-frankfurt"
   region = "eu-central-1"
 }
 
@@ -24,6 +25,8 @@ resource "aws_subnet" "service-vpc-01-subnet-01" {
 }
 
 # ############### CloudWatch logging
+
+# TODO
 # # We add CloudWatch logging at checkov suggestion
 # resource "aws_kms_key" "our_kms_key" {
 #   # checkov:skip=CKV_AWS_7: ADD REASON
@@ -39,50 +42,37 @@ resource "aws_flow_log" "vpc-01-flow-log" {
 }
 
 resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
-  # checkov:skip=CKV_AWS_158: ADD REASON
+  # checkov:skip=CKV_AWS_158: TODO - follow checkov suggestion, for now we go with default encryption
   name = "our_cloudwatch_log_group"
   #kms_key_id        = aws_kms_key.our_kms_key.id
   retention_in_days = 5
 }
 
 resource "aws_iam_role" "our_log_iam_role" {
-  name               = "our_log_iam_role"
-  assume_role_policy = data.aws_iam_policy_document.assume_logger_role.json
-}
-
-data "aws_iam_policy" "log_policy" {
-  provider = aws.destination
-  name     = "CloudWatchLogsFullAccess"
-}
-
-resource "aws_iam_role" "assume_logger_role" {
-  provider            = aws.destination
-  name                = "assume_logger_role"
-  assume_role_policy  = data.aws_iam_policy_document.assume_role.json
+  name                = "our_log_iam_role"
+  assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
   managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
 }
 
+data "aws_iam_policy" "log_policy" {
+  #provider = aws.destination
+  name = "CloudWatchLogsFullAccess"
+}
 
-# data "aws_caller_identity" "current" {}
+data "aws_iam_policy_document" "log_policy_document" {
+  #provider = aws.destination
+  statement {
+    effect = "Allow"
+    # resources = ["*"]
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_caller_identity.current.id]
+    }
+  }
+}
 
-# data "aws_iam_policy_document" "log_policy" {
-#   checkov:skip=CKV_AWS_111: Do not have sensibility about why this is wrong ATM
-#   statement {
-#     effect = "Allow"
-
-#     actions = [
-#       "logs:*",
-#       "cloudwatch:GenerateQuery"
-#     ]
-
-#     principals {
-#       type        = "AWS"
-#       identifiers = [data.aws_caller_identity.current.id]
-#     }
-
-#     resources = ["*"]
-#   }
-# }
+data "aws_caller_identity" "current" {}
 
 ############### Network Security Group (can we reuse for more VPCs?)
 resource "aws_default_security_group" "default" {
