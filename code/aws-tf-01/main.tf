@@ -40,7 +40,7 @@ resource "aws_subnet" "service-vpc-01-subnet-01" {
   }
 }
 
-# ############### CloudWatch logging
+############### CloudWatch logging
 
 # TODO
 # # We add CloudWatch logging at checkov suggestion
@@ -91,6 +91,13 @@ data "aws_iam_policy_document" "log_policy_document" {
 data "aws_caller_identity" "current" {}
 
 ############### Network Security Group (can we reuse for more VPCs?)
-resource "aws_default_security_group" "default" {
+resource "aws_default_security_group" "aws-tf-01-sg" {
   vpc_id = aws_vpc.service-vpc-01.id
+  tags = {
+    project                 = "aws-tf-01"
+    name                    = "${var.our_resource_group_name}_main_vpc_security_group"
+    our_resource_group_name = var.our_resource_group_name
+  }
 }
+
+############### Inbound rules for main VPC

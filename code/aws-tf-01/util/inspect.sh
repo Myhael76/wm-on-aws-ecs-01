@@ -8,3 +8,4 @@ runCmd(){
 
 runCmd "aws ec2 describe-vpcs"
 runCmd "aws ec2 describe-subnets"
+runCmd "aws ec2 describe-security-groups"
