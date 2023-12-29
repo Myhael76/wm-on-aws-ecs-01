@@ -1,12 +1,17 @@
 ARG VARIANT="ubuntu-22.04"
+# checkov:skip=CKV_DOCKER_2: We do not really need a HEALTHCHECK on this image
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
+ARG __WORKSPACE_FOLDER=/workspace
+
+ENV WORKSPACE_FOLDER=${__WORKSPACE_FOLDER}
 # Install OS packages
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
+        graphviz \
         make \
-    && mkdir -p /workspace \
-    && chown vscode:vscode /workspace
+    && mkdir -p ${__WORKSPACE_FOLDER} \
+    && chown vscode:vscode ${__WORKSPACE_FOLDER}
 
 USER vscode
 
@@ -27,7 +32,7 @@ RUN cd /tmp/ \
     && cd aws-code-habits \
     && make devcontainer/terraform/init \
     && rm -rf /tmp/aws-code-habits \
-    && cd /workspace \
-    && git config --global --add safe.directory /workspace
+    && cd ${__WORKSPACE_FOLDER} \
+    && git config --global --add safe.directory ${__WORKSPACE_FOLDER}
 
-USER root
+VOLUME [ "${__WORKSPACE_FOLDER}" ]

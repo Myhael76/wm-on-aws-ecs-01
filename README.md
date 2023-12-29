@@ -56,3 +56,12 @@ You must be able to run docker compose.
 - Now adding tags. It seems it is important to work with tags in AWS, otherwise it is difficult to find resources.
   - Also learning how to concatenate strings...
   - Also learning how to inspect what we did from aws cli
+- Gradually extending
+  - tags
+  - resource group based on tag
+
+
+#### 2023-12-29
+
+- Reviewed the structure of .devcontainer folder, making a union with the docker compose contents. Studied the structure of the dev-containers solution and found a number of inconsistencies and improvement points. To reserve eventual improvements for the future, the solution is good enough for now.
+- Tested the project with a second clone, with the intention of generating two sets of variables. It fails for name conflicts, thus decided to add a prefix to names.
