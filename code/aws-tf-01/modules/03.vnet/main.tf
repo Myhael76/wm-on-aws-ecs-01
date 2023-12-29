@@ -11,7 +11,7 @@ terraform {
 
 locals {
   vnet_chapter_tags = merge(var.meta_tags, {
-    project_chapter = "02.networking"
+    project_chapter = "03.networking"
   })
 }
 

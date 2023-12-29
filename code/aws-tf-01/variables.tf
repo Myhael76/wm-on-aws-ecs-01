@@ -3,11 +3,11 @@ variable "resources_prefix" {
   default = "pj01"
 }
 
-
-variable "main_deployment_region" {
-  type    = string
-  default = "eu-central-1"
+variable "deployment_regions_list"{
+  type = list(string)
+  default = ["eu-central-1"]
 }
+
 variable "provided_meta_tags" {
   type = map(string)
   default = {

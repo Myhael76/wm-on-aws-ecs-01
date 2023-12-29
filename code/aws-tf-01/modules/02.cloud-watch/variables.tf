@@ -9,17 +9,12 @@ variable "meta_tags" {
   }
 }
 
-variable "log_iam_role" {
-  type    = string
-  default = "log_iam_role"
-}
-
 variable "cloudwatch_destination_log_group" {
   type    = string
   default = "logs_destination"
 }
 
-variable "main_deployment_region"{
+variable "main_key_pair_arn"{
   type = string
-  default = "eu-central-1"
+  default = "You must provide this"
 }

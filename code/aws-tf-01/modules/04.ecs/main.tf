@@ -11,7 +11,7 @@ terraform {
 
 locals {
   ecs_chapter_tags = merge(var.meta_tags, {
-    project_chapter = "03.ecs"
+    project_chapter = "04.ecs"
   })
 }
 
