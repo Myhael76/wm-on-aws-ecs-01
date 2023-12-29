@@ -14,126 +14,66 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-# Service VPC 01
-resource "aws_vpc" "service-vpc-01" {
-  cidr_block = "10.0.0.0/16"
-
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_main_vpc"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-resource "aws_subnet" "service-vpc-01-subnet-01" {
-  vpc_id     = aws_vpc.service-vpc-01.id
-  cidr_block = "10.0.1.0/24"
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_main_vpc_subnet"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-############### CloudWatch logging
-
-# TODO
-# # We add CloudWatch logging at checkov suggestion
-# resource "aws_kms_key" "our_kms_key" {
-#   # checkov:skip=CKV_AWS_7: ADD REASON
-#   description             = "Our KMS key"
-#   deletion_window_in_days = 8
-# }
-
-resource "aws_flow_log" "vpc-01-flow-log" {
-  iam_role_arn    = aws_iam_role.our_log_iam_role.arn
-  log_destination = aws_cloudwatch_log_group.our_cloudwatch_log_group.arn
-  traffic_type    = "ALL"
-  vpc_id          = aws_vpc.service-vpc-01.id
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_main_flow_log"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
-  # checkov:skip=CKV_AWS_158: TODO - follow checkov suggestion, for now we go with default encryption
-  name = "our_cloudwatch_log_group"
-  #kms_key_id        = aws_kms_key.our_kms_key.id
-  retention_in_days = 5
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_cw_log_group"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-resource "aws_iam_role" "our_log_iam_role" {
-  name                = "our_log_iam_role"
-  assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
-  managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_main_log_iam_rule"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-data "aws_iam_policy" "log_policy" {
-  #provider = aws.destination
-  name = "CloudWatchLogsFullAccess"
-}
-
-data "aws_iam_policy_document" "log_policy_document" {
-  #provider = aws.destination
-  statement {
-    effect = "Allow"
-    # resources = ["*"]
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "AWS"
-      identifiers = [data.aws_caller_identity.current.id]
+#### Project resources are tagged with the following computed tags and groupped in the below resource group for convenience
+#### Each submodule isolates a "concern" and works like a "chapter" of our story
+locals {
+  meta_tags = merge(var.provided_meta_tags,
+    {
+      project_name        = "${var.our_resources_prefix}_project"
+      resource_group_name = "${var.our_resources_prefix}_rg"
     }
-  }
+  )
 }
 
-data "aws_caller_identity" "current" {}
-
-############### Network Security Group (can we reuse for more VPCs?)
-resource "aws_default_security_group" "aws-tf-01-sg" {
-  vpc_id = aws_vpc.service-vpc-01.id
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_main_vpc_security_group"
-    our_resource_group_name = var.our_resource_group_name
-  }
-}
-
-############### Resource Group
-
+# Story index -> Project Resource Group allows for quick navigation and control of all our resources
 resource "aws_resourcegroups_group" "our_resource_group" {
-  name = var.our_resource_group_name
-  tags = {
-    project                 = "aws-tf-01"
-    name                    = "${var.our_resource_group_name}_resource_group"
-    our_resource_group_name = var.our_resource_group_name
-  }
+  name = local.meta_tags.resource_group_name
+  tags = merge(local.meta_tags, {
+    project_flavor = "blueberry"
+  })
   resource_query {
     query = <<JSON
-{
-  "ResourceTypeFilters": [
-    "AWS::AllSupported"
-  ],
-  "TagFilters": [
-    {
-      "Key": "our_resource_group_name",
-      "Values": ["${var.our_resource_group_name}"]
-    }
-  ]
-}
-JSON
+      {
+        "ResourceTypeFilters": [
+          "AWS::AllSupported"
+        ],
+        "TagFilters": [
+          {
+            "Key": "resource_group_name",
+            "Values": ["${local.meta_tags.resource_group_name}"]
+          }
+        ]
+      }
+      JSON
   }
 }
 
-############### Inbound rules for main VPC
+# Story chapter #1 -> Project observability using CloudWatch
+module "cw" {
+  source = "./modules/cloud-watch"
+  providers = {
+    aws = aws.aws-frankfurt
+  }
+
+  # Variables
+  meta_tags = merge(local.meta_tags, {
+    project_flavor = "strawberry"
+  })
+}
+
+# Story chapter #2 -> All AWS resources live in a network arrangmenet of sorts
+module "vnet" {
+  source = "./modules/vnet"
+  providers = {
+    aws = aws.aws-frankfurt
+  }
+
+  # Variables
+  #vnet_properties              = merge(vnet.vnet_properties, { "main_subnet_name" = "sn02" })
+  our_log_iam_role_arn         = module.cw.our_log_iam_role_arn
+  our_cloudwatch_log_group_arn = module.cw.our_log_destination_arn
+
+  meta_tags = merge(local.meta_tags, {
+    project_flavor = "raspberry"
+  })
+}

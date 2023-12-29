@@ -1,4 +1,11 @@
-variable "our_resource_group_name" {
+variable "our_resources_prefix" {
   type    = string
-  default = "rg4pj-aws-tf-01"
+  default = "pj01"
+}
+
+variable "provided_meta_tags" {
+  #type = {}
+  default = {
+    "environment_type" = "development"
+  }
 }

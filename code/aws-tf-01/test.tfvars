@@ -1,1 +1,4 @@
-our_resource_group_name = "test-rg-02"
+our_resources_prefix = "t02"
+provided_meta_tags = {
+  environment_type = "Dev Environment"
+}
