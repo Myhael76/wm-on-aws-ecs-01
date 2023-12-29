@@ -4,7 +4,7 @@ variable "our_resources_prefix" {
 }
 
 variable "provided_meta_tags" {
-  #type = {}
+  type = map(string)
   default = {
     "environment_type" = "development"
   }

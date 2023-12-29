@@ -67,3 +67,4 @@ You must be able to run docker compose.
 - Tested the project with a second clone, with the intention of generating two sets of variables. It fails for name conflicts, thus decided to add a prefix to names.
 - Refactor to modules to keep concerns separated and learn modules
 - trunk linter manager seems to behave differently from the linters themselves. e.g. checkov did not protest at a 5 days logs retention, but trunk with checkov did. (?). However trunk seems more aggressive and for one that would follow stricter discipline may do well.
+- It seems there is an issue with FlowLogs, they are not getting destroyed

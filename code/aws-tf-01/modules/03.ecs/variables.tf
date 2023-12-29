@@ -1,6 +1,3 @@
-variable "meta_tags" {}
-
-variable "a" {
-  type    = string
-  default = "a"
+variable "meta_tags" {
+  type = map(string)
 }

@@ -49,6 +49,7 @@ resource "aws_kms_key" "log_enc_key" {
   description             = "Our KMS key"
   deletion_window_in_days = 8
   enable_key_rotation     = true
+  # TODO: is a single location sufficient? How to add multiple with variables?
   policy                  = <<POLICY
     {
       "Version": "2012-10-17",
@@ -60,6 +61,18 @@ resource "aws_kms_key" "log_enc_key" {
           },
           "Action": "kms:*",
           "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Principal": { "Service": "logs.${var.cloudwatch_location_for_policy}.amazonaws.com" },
+          "Action": [
+            "kms:Encrypt*",
+            "kms:Decrypt*",
+            "kms:ReEncrypt*",
+            "kms:GenerateDataKey*",
+            "kms:Describe*"
+          ],
+          "Resource": "*"
         }
       ]
     }
@@ -69,7 +82,7 @@ resource "aws_kms_key" "log_enc_key" {
 
 resource "aws_cloudwatch_log_group" "cloudwatch_destination_log_group" {
   name              = var.cloudwatch_destination_log_group
+  kms_key_id        = aws_kms_key.log_enc_key.arn
   retention_in_days = 5
   tags              = merge(local.clodwatch_chapter_tags, { Name = "destination_log_group" })
-  kms_key_id        = aws_kms_key.log_enc_key.id
 }
