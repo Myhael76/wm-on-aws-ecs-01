@@ -4,7 +4,7 @@ data "aws_iam_policy_document" "allow_kms_actions" {
     effect = "Allow"
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = [data.aws_caller_identity.current.id]
     }
 
@@ -16,8 +16,8 @@ data "aws_iam_policy_document" "allow_kms_actions" {
     effect = "Allow"
 
     principals {
-      type = "Service"
-      identifiers = [formatlist("logs.%s.amazonaws.com", var.deployment_regions_list)]
+      type        = "Service"
+      identifiers = formatlist("logs.%s.amazonaws.com", var.deployment_regions_list)
     }
 
     actions = [

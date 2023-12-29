@@ -98,7 +98,7 @@ module "ecs" {
   }
 
   # Variables
-  kms_key_arn                    = module.cw.kms_key_arn
+  kms_key_arn                    = module.sec.main_key_pair_arn
   log_group_name                 = module.cw.log_group_name
   ecs_service_subnet_ids         = module.vnet.ecs_service_subnet_ids
   ecs_service_security_group_ids = module.vnet.ecs_service_security_group_ids
