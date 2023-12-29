@@ -9,9 +9,9 @@ variable "meta_tags" {
   }
 }
 
-variable "our_log_iam_role" {
+variable "log_iam_role" {
   type    = string
-  default = "our_log_iam_role"
+  default = "log_iam_role"
 }
 
 variable "cloudwatch_destination_log_group" {

@@ -19,14 +19,14 @@ provider "aws" {
 locals {
   meta_tags = merge(var.provided_meta_tags,
     {
-      project_name        = "${var.our_resources_prefix}_project"
-      resource_group_name = "${var.our_resources_prefix}_rg"
+      project_name        = "${var.resources_prefix}_project"
+      resource_group_name = "${var.resources_prefix}_rg"
     }
   )
 }
 
 # Story index -> Project Resource Group allows for quick navigation and control of all our resources
-resource "aws_resourcegroups_group" "our_resource_group" {
+resource "aws_resourcegroups_group" "resource_group" {
   name = local.meta_tags.resource_group_name
   tags = merge(local.meta_tags, { "Name" = local.meta_tags.resource_group_name })
 
@@ -67,8 +67,8 @@ module "vnet" {
 
   # Variables
   #vnet_properties              = merge(vnet.vnet_properties, { "main_subnet_name" = "sn02" })
-  our_log_iam_role_arn         = module.cw.our_log_iam_role_arn
-  our_cloudwatch_log_group_arn = module.cw.our_log_destination_arn
+  log_iam_role_arn         = module.cw.log_iam_role_arn
+  cloudwatch_log_group_arn = module.cw.log_destination_arn
 
   meta_tags = local.meta_tags
 }
@@ -81,5 +81,7 @@ module "ecs" {
   }
 
   # Variables
+  kms_key_arn = module.cw.kms_key_arn
+  log_group_name = module.cw.log_group_name
   meta_tags = local.meta_tags
 }

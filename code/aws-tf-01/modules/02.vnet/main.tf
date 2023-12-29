@@ -32,7 +32,7 @@ resource "aws_subnet" "service-vpc-01-subnet-01" {
 
 # TODO
 # # We add CloudWatch logging at checkov suggestion
-# resource "aws_kms_key" "our_kms_key" {
+# resource "aws_kms_key" "kms_key" {
 #   # checkov:skip=CKV_AWS_7: ADD REASON
 #   description             = "Our KMS key"
 #   deletion_window_in_days = 8
@@ -41,8 +41,8 @@ resource "aws_subnet" "service-vpc-01-subnet-01" {
 
 # We need to a flow log to log what is happening in the vnet into our CloudWatch log destination
 resource "aws_flow_log" "vpc-01-flow-log" {
-  iam_role_arn    = var.our_log_iam_role_arn
-  log_destination = var.our_cloudwatch_log_group_arn
+  iam_role_arn    = var.log_iam_role_arn
+  log_destination = var.cloudwatch_log_group_arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.service-vpc-01.id
   tags            = merge(local.vnet_chapter_tags, { Name = "vpc-01-flow-log" })

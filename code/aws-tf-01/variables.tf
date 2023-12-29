@@ -1,4 +1,4 @@
-variable "our_resources_prefix" {
+variable "resources_prefix" {
   type    = string
   default = "pj01"
 }

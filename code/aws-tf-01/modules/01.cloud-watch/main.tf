@@ -17,8 +17,8 @@ locals {
   })
 }
 
-resource "aws_iam_role" "our_log_iam_role" {
-  name                = var.our_log_iam_role
+resource "aws_iam_role" "log_iam_role" {
+  name                = var.log_iam_role
   assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
   managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
   tags                = merge(local.clodwatch_chapter_tags, { Name = "log_iam_role" })

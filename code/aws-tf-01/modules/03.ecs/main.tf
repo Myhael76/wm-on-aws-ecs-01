@@ -24,5 +24,17 @@ resource "aws_ecs_cluster" "main" {
     value = "enabled"
   }
 
+  configuration {
+    execute_command_configuration {
+      kms_key_id = var.kms_key_arn
+      logging    = "OVERRIDE"
+
+      log_configuration {
+        cloud_watch_encryption_enabled = true
+        cloud_watch_log_group_name     = var.log_group_name
+      }
+    }
+  }
+
   tags = merge(local.ecs_chapter_tags, { Name = "cb-cluster" })
 }

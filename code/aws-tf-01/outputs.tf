@@ -5,5 +5,5 @@ output "meta_tags" {
 
 output "project_rg_name" {
   description = "Project resource group name"
-  value       = aws_resourcegroups_group.our_resource_group.name
+  value       = aws_resourcegroups_group.resource_group.name
 }
