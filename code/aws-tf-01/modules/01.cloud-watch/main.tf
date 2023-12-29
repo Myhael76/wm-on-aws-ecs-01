@@ -17,26 +17,53 @@ locals {
   })
 }
 
+# Need to create a role to allow for logging with flow logs
 resource "aws_iam_role" "log_iam_role" {
   name                = var.log_iam_role
-  assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
-  managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
+  assume_role_policy  = data.aws_iam_policy_document.assume_role_for_logging.json
+  # we use the managed policy to log
+  # managed_policy_arns = [data.aws_iam_policy.full_log_policy.arn]
   tags                = merge(local.clodwatch_chapter_tags, { Name = "log_iam_role" })
 }
 
 # This is a predefined role in AWS
 # TODO for production: check if fewer permissions can be granted
-data "aws_iam_policy" "log_policy" {
-  name = "CloudWatchLogsFullAccess"
-}
+# data "aws_iam_policy" "full_log_policy" {
+#   name = "CloudWatchLogsFullAccess"
+# }
+
 
 data "aws_iam_policy_document" "log_policy_document" {
+  # checkov:skip=CKV_AWS_111: TODO: check how to resolve in the future
+    statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+    ]
+
+    #trivy:ignore:AVD-AWS-0057: TODO: check how to resolve in the future
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "allow_logging" {
+  name   = "example"
+  role   = aws_iam_role.log_iam_role.id
+  policy = data.aws_iam_policy_document.log_policy_document.json
+}
+
+data "aws_iam_policy_document" "assume_role_for_logging" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
-      type        = "AWS"
-      identifiers = [data.aws_caller_identity.current.id]
+      type        = "Service"
+      identifiers = ["vpc-flow-logs.amazonaws.com"]
     }
   }
 }
