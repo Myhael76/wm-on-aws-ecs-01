@@ -11,7 +11,7 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   alias  = "aws-frankfurt"
-  region = "eu-central-1"
+  region = var.main_deployment_region
 }
 
 #### Project resources are tagged with the following computed tags and groupped in the below resource group for convenience
@@ -55,7 +55,8 @@ module "cw" {
   }
 
   # Variables
-  meta_tags = local.meta_tags
+  main_deployment_region = var.main_deployment_region
+  meta_tags              = local.meta_tags
 }
 
 # Story chapter #2 -> All AWS resources live in a network arrangmenet of sorts
@@ -81,9 +82,10 @@ module "ecs" {
   }
 
   # Variables
-  kms_key_arn = module.cw.kms_key_arn
-  log_group_name = module.cw.log_group_name
-  ecs_service_subnet_ids = module.vnet.ecs_service_subnet_ids
+  kms_key_arn                    = module.cw.kms_key_arn
+  log_group_name                 = module.cw.log_group_name
+  ecs_service_subnet_ids         = module.vnet.ecs_service_subnet_ids
   ecs_service_security_group_ids = module.vnet.ecs_service_security_group_ids
-  meta_tags = local.meta_tags
+  main_deployment_region         = var.main_deployment_region
+  meta_tags                      = local.meta_tags
 }

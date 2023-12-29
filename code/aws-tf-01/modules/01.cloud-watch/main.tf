@@ -91,7 +91,7 @@ resource "aws_kms_key" "log_enc_key" {
         },
         {
           "Effect": "Allow",
-          "Principal": { "Service": "logs.${var.cloudwatch_location_for_policy}.amazonaws.com" },
+          "Principal": { "Service": "logs.${var.main_deployment_region}.amazonaws.com" },
           "Action": [
             "kms:Encrypt*",
             "kms:Decrypt*",

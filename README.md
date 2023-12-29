@@ -71,3 +71,5 @@ You must be able to run docker compose.
 - Added ECS capacity provider and a hello-world task definition.
 - Added a service according to definition. It should fail because it can't pull the image. I'd like to see the output in the CloudWatch logs
   - Got it, it required a bit of navigation
+- Have an error after adding the internet gateway: log group is not accessible. I need to see what permission is missing.
+- Spent time understanding permissions. Now containers are sending towards the correct log group, but they can't create the log stream

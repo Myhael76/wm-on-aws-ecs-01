@@ -20,3 +20,8 @@ variable ecs_service_subnet_ids {
 variable ecs_service_security_group_ids {
   type = list(string)
 }
+
+variable "main_deployment_region"{
+  type = string
+  default = "eu-central-1"
+}

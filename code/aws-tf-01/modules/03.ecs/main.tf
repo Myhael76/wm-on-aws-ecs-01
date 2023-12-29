@@ -60,12 +60,20 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
   # for valid values see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu                      = 256
   memory                   = 512
-  #execution_role_arn       = var.ecs_task_execution_role_arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
       name      = "cb-task"
       image     = "hello-world"
       essential = true
+      logConfiguration = {
+        logDriver = "awslogs",
+        options= {
+          awslogs-group = var.log_group_name,
+          awslogs-region = var.main_deployment_region,
+          awslogs-stream-prefix = "ecs"
+        }
+      }
       # portMappings = [
       #   {
       #     containerPort = 80
@@ -97,4 +105,22 @@ resource "aws_ecs_service" "cb-service-hw" {
   #   container_port   = 80
   # }
   tags = merge(local.ecs_chapter_tags, { Name = "hello-world-service" })
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "role-name"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      },
+    ]
+  })
 }

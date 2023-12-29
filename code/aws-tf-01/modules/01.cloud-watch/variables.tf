@@ -19,7 +19,7 @@ variable "cloudwatch_destination_log_group" {
   default = "logs_destination"
 }
 
-variable "cloudwatch_location_for_policy"{
+variable "main_deployment_region"{
   type = string
   default = "eu-central-1"
 }
