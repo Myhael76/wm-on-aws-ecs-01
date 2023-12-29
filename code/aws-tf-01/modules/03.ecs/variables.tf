@@ -12,3 +12,11 @@ variable "log_group_name"{
   type = string
   default = "you must pass this"
 }
+
+variable ecs_service_subnet_ids {
+  type = list(string)
+}
+
+variable ecs_service_security_group_ids {
+  type = list(string)
+}

@@ -75,3 +75,24 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
     }
   ])
 }
+# This is our ECS service
+resource "aws_ecs_service" "cb-service-hw" {
+  name            = "cb-service-kw"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.cb-task-hw.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = var.ecs_service_subnet_ids
+    security_groups  = var.ecs_service_security_group_ids
+    assign_public_ip = false
+  }
+
+  # we do not need an LB, the service is expected to produce stdout "hello world" only
+  # load_balancer {
+  #   target_group_arn = var.alb_tg_arn
+  #   container_name   = "cb-task"
+  #   container_port   = 80
+  # }
+}
