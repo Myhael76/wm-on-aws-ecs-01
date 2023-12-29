@@ -74,6 +74,7 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
       # ]
     }
   ])
+  tags = merge(local.ecs_chapter_tags, { Name = "hello-world-task-def" })
 }
 # This is our ECS service
 resource "aws_ecs_service" "cb-service-hw" {
@@ -95,4 +96,5 @@ resource "aws_ecs_service" "cb-service-hw" {
   #   container_name   = "cb-task"
   #   container_port   = 80
   # }
+  tags = merge(local.ecs_chapter_tags, { Name = "hello-world-service" })
 }
