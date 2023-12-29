@@ -11,11 +11,17 @@ terraform {
   required_version = ">= 1.6"
 }
 
+locals {
+  clodwatch_chapter_tags = merge(var.meta_tags, {
+    project_chapter = "01.cloudwatch"
+  })
+}
+
 resource "aws_iam_role" "our_log_iam_role" {
   name                = var.our_log_iam_role
   assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
   managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
-  tags                = merge(var.meta_tags, { "resource_type" = "assume_role" })
+  tags                = local.clodwatch_chapter_tags
 }
 
 # This is a predefined role in AWS
@@ -49,6 +55,6 @@ resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
   # checkov:skip=CKV_AWS_158: TODO - follow checkov suggestion, for now we go with default encryption
   name              = var.our_cloudwatch_log_group
   retention_in_days = 5
-  tags              = merge(var.meta_tags, { "resource_type" = "clowdwatch_log_group" })
+  tags              = local.clodwatch_chapter_tags
   #kms_key_id        = aws_kms_key.our_kms_key.id
 }

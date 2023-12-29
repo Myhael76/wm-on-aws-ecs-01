@@ -28,9 +28,8 @@ locals {
 # Story index -> Project Resource Group allows for quick navigation and control of all our resources
 resource "aws_resourcegroups_group" "our_resource_group" {
   name = local.meta_tags.resource_group_name
-  tags = merge(local.meta_tags, {
-    project_flavor = "blueberry"
-  })
+  tags = local.meta_tags
+
   resource_query {
     query = <<JSON
       {
@@ -50,20 +49,18 @@ resource "aws_resourcegroups_group" "our_resource_group" {
 
 # Story chapter #1 -> Project observability using CloudWatch
 module "cw" {
-  source = "./modules/cloud-watch"
+  source = "./modules/01.cloud-watch"
   providers = {
     aws = aws.aws-frankfurt
   }
 
   # Variables
-  meta_tags = merge(local.meta_tags, {
-    project_flavor = "strawberry"
-  })
+  meta_tags = local.meta_tags
 }
 
 # Story chapter #2 -> All AWS resources live in a network arrangmenet of sorts
 module "vnet" {
-  source = "./modules/vnet"
+  source = "./modules/02.vnet"
   providers = {
     aws = aws.aws-frankfurt
   }
@@ -73,7 +70,16 @@ module "vnet" {
   our_log_iam_role_arn         = module.cw.our_log_iam_role_arn
   our_cloudwatch_log_group_arn = module.cw.our_log_destination_arn
 
-  meta_tags = merge(local.meta_tags, {
-    project_flavor = "raspberry"
-  })
+  meta_tags = local.meta_tags
+}
+
+# Story chapter #3 -> Adding ECS to the mix
+module "ecs" {
+  source = "./modules/03.ecs"
+  providers = {
+    aws = aws.aws-frankfurt
+  }
+
+  # Variables
+  meta_tags = local.meta_tags
 }
