@@ -21,7 +21,7 @@ resource "aws_iam_role" "our_log_iam_role" {
   name                = var.our_log_iam_role
   assume_role_policy  = data.aws_iam_policy_document.log_policy_document.json
   managed_policy_arns = [data.aws_iam_policy.log_policy.arn]
-  tags                = local.clodwatch_chapter_tags
+  tags                = merge(local.clodwatch_chapter_tags, { Name = "log_iam_role" })
 }
 
 # This is a predefined role in AWS
@@ -51,10 +51,10 @@ data "aws_caller_identity" "current" {}
 #   deletion_window_in_days = 8
 # }
 
-resource "aws_cloudwatch_log_group" "our_cloudwatch_log_group" {
+resource "aws_cloudwatch_log_group" "cloudwatch_destination_log_group" {
   # checkov:skip=CKV_AWS_158: TODO - follow checkov suggestion, for now we go with default encryption
-  name              = var.our_cloudwatch_log_group
+  name              = var.cloudwatch_destination_log_group
   retention_in_days = 5
-  tags              = local.clodwatch_chapter_tags
+  tags              = merge(local.clodwatch_chapter_tags, { Name = "destination_log_group" })
   #kms_key_id        = aws_kms_key.our_kms_key.id
 }

@@ -18,14 +18,14 @@ locals {
 # Service VPC 01
 resource "aws_vpc" "service-vpc-01" {
   cidr_block = "10.0.0.0/16"
-  tags       = local.vnet_chapter_tags
+  tags       = merge(local.vnet_chapter_tags, { Name = "service-vpc-01" })
 }
 
 # Main Service subnet
 resource "aws_subnet" "service-vpc-01-subnet-01" {
   vpc_id     = aws_vpc.service-vpc-01.id
   cidr_block = "10.0.1.0/24"
-  tags       = local.vnet_chapter_tags
+  tags       = merge(local.vnet_chapter_tags, { Name = "service-vpc-01-subnet-01" })
 }
 
 ############### CloudWatch logging
@@ -45,11 +45,11 @@ resource "aws_flow_log" "vpc-01-flow-log" {
   log_destination = var.our_cloudwatch_log_group_arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.service-vpc-01.id
-  tags            = local.vnet_chapter_tags
+  tags            = merge(local.vnet_chapter_tags, { Name = "vpc-01-flow-log" })
 }
 
 ############### Network Security Group (can we reuse for more VPCs?)
-resource "aws_default_security_group" "aws-tf-01-sg" {
+resource "aws_default_security_group" "vpc-01-sg" {
   vpc_id = aws_vpc.service-vpc-01.id
-  tags   = local.vnet_chapter_tags
+  tags   = merge(local.vnet_chapter_tags, { Name = "vpc-01-sg" })
 }

@@ -5,7 +5,7 @@ variable "our_log_iam_role" {
   default = "our_log_iam_role"
 }
 
-variable "our_cloudwatch_log_group" {
+variable "cloudwatch_destination_log_group" {
   type    = string
-  default = "our_cloudwatch_log_group"
+  default = "logs_destination"
 }

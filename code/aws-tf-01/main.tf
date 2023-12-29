@@ -28,7 +28,7 @@ locals {
 # Story index -> Project Resource Group allows for quick navigation and control of all our resources
 resource "aws_resourcegroups_group" "our_resource_group" {
   name = local.meta_tags.resource_group_name
-  tags = local.meta_tags
+  tags = merge(local.meta_tags, { "Name" = local.meta_tags.resource_group_name })
 
   resource_query {
     query = <<JSON
