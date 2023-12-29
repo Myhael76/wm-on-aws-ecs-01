@@ -19,5 +19,10 @@ locals {
 resource "aws_ecs_cluster" "main" {
   # checkov:skip=CKV_AWS_65: CI TEMP, to remove
   name = "cb-cluster"
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+
   tags = merge(local.ecs_chapter_tags, { Name = "cb-cluster" })
 }
