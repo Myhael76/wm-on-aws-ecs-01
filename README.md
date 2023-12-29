@@ -68,3 +68,4 @@ You must be able to run docker compose.
 - Refactor to modules to keep concerns separated and learn modules
 - trunk linter manager seems to behave differently from the linters themselves. e.g. checkov did not protest at a 5 days logs retention, but trunk with checkov did. (?). However trunk seems more aggressive and for one that would follow stricter discipline may do well.
 - It seems there is an issue with FlowLogs, they are not getting destroyed
+- Added ECS capacity provider and a hello-world container. I'd like to see the output in the CloudWatch logs
