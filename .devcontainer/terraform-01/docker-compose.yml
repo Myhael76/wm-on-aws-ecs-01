@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   aws-tf-01:
-    build: 
+    build:
       context: ./build
       args:
         - __WORKSPACE_FOLDER=${WORKSPACE_FOLDER}
     volumes:
       - ../../:/${WORKSPACE_FOLDER}/
-    command: ["sleep", "infinity"]
+    command: [ "sleep", "infinity" ]
     #entrypoint: "tail -f /dev/null"
