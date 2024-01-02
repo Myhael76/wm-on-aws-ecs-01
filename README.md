@@ -80,6 +80,10 @@ You must be able to run docker compose.
 - But first, it seems ECS cannot download the image. Must resolve this first.
   - Hint received from the CloudWatch logs of the network. I saw dropped packages, therefore it was about a security group.
   - It seems that ecs service receives a network config where a security group is passed. That security group must allow the outbound traffic to pull the image
+  - Besides the security group, it seems that NAT is required if the IP is private or a public IP. It's not sufficient to define routes and allow from the security group
+    - My purpose is to keep it private, therefore I need to add a [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html). I thought the IGW should suffice (???), however, the [IGW](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html) does not do NAT, it requires public subnets.
+    - Therefore the plan here is to substitute the IGW with a NATGW
+- Resolved the issues: pay attention to the networking topology and routing rules! See [here](https://dev.betterdoc.org/infrastructure/2020/02/04/setting-up-a-nat-gateway-on-aws-using-terraform.html)
 
 
 ## Prepare KT

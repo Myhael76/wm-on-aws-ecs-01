@@ -56,12 +56,14 @@ resource "aws_ecs_cluster_capacity_providers" "cb-cluster-capacity" {
 
 # This is our ECS task definition
 resource "aws_ecs_task_definition" "cb-task-hw" {
+  # checkov:skip=CKV_AWS_249: ADD REASON
   family                   = "cb-task-kw"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   # for valid values see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu                = 256
   memory             = 512
+  task_role_arn      = aws_iam_role.ecs_task_execution_role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
@@ -74,6 +76,10 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
           awslogs-group         = var.log_group_name,
           awslogs-region        = var.main_deployment_region,
           awslogs-stream-prefix = "ecs"
+          # the log group must exist
+          # awslogs-create-group = "false"
+          # awslogs-datetime-format = "%Y-%m-%dT%H:%M:%S.%fZ"
+          # awslogs-multiline-pattern = "^\\d{4
         }
       }
       # portMappings = [
@@ -107,22 +113,4 @@ resource "aws_ecs_service" "cb-service-hw" {
   #   container_port   = 80
   # }
   tags = merge(local.ecs_chapter_tags, { Name = "hello-world-service" })
-}
-
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecs_task_execution_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-      },
-    ]
-  })
 }

@@ -1,3 +1,4 @@
+## Module vnet - virtual networking and related fundamentals
 terraform {
   required_providers {
     aws = {
@@ -9,11 +10,7 @@ terraform {
 }
 
 locals {
-  security_chapter_tags = merge(var.meta_tags, {
-    project_chapter = "01.security"
+  vnet_chapter_tags = merge(var.meta_tags, {
+    project_chapter = "03.networking"
   })
 }
-
-
-data "aws_caller_identity" "current" {}
-

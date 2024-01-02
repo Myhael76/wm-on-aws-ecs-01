@@ -3,9 +3,10 @@ output "Main-VPC-id" {
   value       = aws_vpc.service-vpc-01.id
 }
 
+# Our services will be associated to the private subnet(s)
 output "ecs_service_subnet_ids" {
   description = "Defined subnets ids list"
-  value       = [aws_subnet.service-vpc-01-subnet-01.id]
+  value       = [aws_subnet.private.id]
 }
 
 output "ecs_service_security_group_ids" {

@@ -30,5 +30,4 @@ data "aws_iam_policy_document" "allow_kms_actions" {
 
     resources = [aws_kms_key.main_key_pair.arn]
   }
-
 }

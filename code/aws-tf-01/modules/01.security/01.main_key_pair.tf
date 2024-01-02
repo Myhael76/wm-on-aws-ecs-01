@@ -6,7 +6,7 @@ resource "aws_kms_key" "main_key_pair" {
   tags                    = merge(local.security_chapter_tags, { Name = "main_key_pair" })
 }
 
-resource "aws_kms_key_policy" "main_key_access_policy"{
+resource "aws_kms_key_policy" "main_key_access_policy" {
   key_id = aws_kms_key.main_key_pair.id
   policy = data.aws_iam_policy_document.allow_kms_actions.json
 }
