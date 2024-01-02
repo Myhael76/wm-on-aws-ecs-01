@@ -6,11 +6,11 @@ data "aws_iam_policy_document" "allow_logging_policy_document" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
+      # "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams",
+      #"logs:DescribeLogGroups",
+      #"logs:DescribeLogStreams",
     ]
 
     #trivy:ignore:AVD-AWS-0057: TODO: check how to resolve in the future
