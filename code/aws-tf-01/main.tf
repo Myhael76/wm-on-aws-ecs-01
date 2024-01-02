@@ -51,7 +51,6 @@ resource "aws_resourcegroups_group" "resource_group" {
 }
 
 # Story chapter #1 -> Project security
-
 module "sec" {
   source = "./modules/01.security"
   providers = {
@@ -72,7 +71,7 @@ module "cw" {
 
   # Variables
   main_key_pair_arn = module.sec.main_key_pair_arn
-  meta_tags              = local.meta_tags
+  meta_tags         = local.meta_tags
 }
 
 # Story chapter #2 -> All AWS resources live in a network arrangmenet of sorts
@@ -103,5 +102,5 @@ module "ecs" {
   ecs_service_subnet_ids         = module.vnet.ecs_service_subnet_ids
   ecs_service_security_group_ids = module.vnet.ecs_service_security_group_ids
   #main_deployment_region         = var.main_deployment_region
-  meta_tags                      = local.meta_tags
+  meta_tags = local.meta_tags
 }

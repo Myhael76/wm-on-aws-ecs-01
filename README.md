@@ -84,7 +84,10 @@ You must be able to run docker compose.
     - My purpose is to keep it private, therefore I need to add a [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html). I thought the IGW should suffice (???), however, the [IGW](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html) does not do NAT, it requires public subnets.
     - Therefore the plan here is to substitute the IGW with a NATGW
 - Resolved the issues: pay attention to the networking topology and routing rules! See [here](https://dev.betterdoc.org/infrastructure/2020/02/04/setting-up-a-nat-gateway-on-aws-using-terraform.html)
-
+- Focusing now on [scheduled tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/scheduled_tasks.html)
+- Other points to bring forward are how to qualify container images and how to manage the secrets to pull the images.
+- Trying out task scheduling with EventBridge and ECS
+- After much pain I observe that the CloudTrail tool gives me the information I wanted.
 
 ## Prepare KT
 

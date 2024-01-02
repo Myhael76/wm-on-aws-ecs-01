@@ -15,6 +15,68 @@ locals {
   })
 }
 
+# ECS scheduled tasks can be created using EventBridge, see https://github.com/terraform-aws-modules/terraform-aws-eventbridge/blob/master/examples/with-ecs-scheduling/main.tf
+module "eventbridge" {
+  source     = "git::https://github.com/terraform-aws-modules/terraform-aws-eventbridge.git?ref=6d2d61d7ec5781563648937319d018b01d4ddfe6" # commit hash of version 3.0.0
+  create_bus = false
+  bus_name   = "default"
+
+  create_role       = true
+  role_name         = "ecs-eventbridge-scheduler-role"
+  attach_ecs_policy = true
+  ecs_target_arns   = [aws_ecs_task_definition.cb-task-hw.arn]
+
+  tags = merge(local.ecs_chapter_tags, { subchapter = "04.01 eventbridge module" })
+
+  # Fire every five minutes
+  rules = {
+    hwsched = {
+      description         = "Cron for Hello World"
+      enabled             = true
+      schedule_expression = "rate(20 minutes)"
+    }
+  }
+
+  # Send to a fargate ECS cluster
+  targets = {
+    hwsched = [
+      {
+        name            = "Hello World Scheduler"
+        arn             = aws_ecs_cluster.main.arn
+        attach_role_arn = true
+
+        ecs_target = {
+          # If a capacity_provider_strategy specified, the launch_type parameter must be omitted.
+          # launch_type         = "FARGATE"
+          task_count              = 1
+          task_definition_arn     = aws_ecs_task_definition.cb-task-hw.arn
+          enable_ecs_managed_tags = true
+
+          network_configuration = {
+            assign_public_ip = false
+            subnets          = var.ecs_service_subnet_ids
+            security_groups  = var.ecs_service_security_group_ids
+          }
+
+          # If a capacity_provider_strategy is specified, the launch_type parameter must be omitted.
+          # If no capacity_provider_strategy or launch_type is specified, the default capacity provider strategy for the cluster is used.
+          capacity_provider_strategy = [
+            {
+              capacity_provider = "FARGATE"
+              base              = 1
+              weight            = 100
+            },
+            {
+              capacity_provider = "FARGATE_SPOT"
+              weight            = 100
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
 # This is our ECS cluster
 resource "aws_ecs_cluster" "main" {
   # checkov:skip=CKV_AWS_65: CI TEMP, to remove
@@ -45,7 +107,7 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_ecs_cluster_capacity_providers" "cb-cluster-capacity" {
   cluster_name = aws_ecs_cluster.main.name
 
-  capacity_providers = ["FARGATE_SPOT"]
+  capacity_providers = ["FARGATE_SPOT", "FARGATE"]
 
   default_capacity_provider_strategy {
     base              = 1
@@ -93,24 +155,26 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
   tags = merge(local.ecs_chapter_tags, { Name = "hello-world-task-def" })
 }
 # This is our ECS service
-resource "aws_ecs_service" "cb-service-hw" {
-  name            = "cb-service-kw"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.cb-task-hw.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+# resource "aws_ecs_service" "cb-service-hw" {
+#   name            = "cb-service-kw"
+#   cluster         = aws_ecs_cluster.main.id
+#   task_definition = aws_ecs_task_definition.cb-task-hw.arn
+#   desired_count   = 1
+#   launch_type     = "FARGATE"
 
-  network_configuration {
-    subnets          = var.ecs_service_subnet_ids
-    security_groups  = var.ecs_service_security_group_ids
-    assign_public_ip = false
-  }
+#   network_configuration {
+#     subnets          = var.ecs_service_subnet_ids
+#     security_groups  = var.ecs_service_security_group_ids
+#     assign_public_ip = false
+#   }
 
-  # we do not need an LB, the service is expected to produce stdout "hello world" only
-  # load_balancer {
-  #   target_group_arn = var.alb_tg_arn
-  #   container_name   = "cb-task"
-  #   container_port   = 80
-  # }
-  tags = merge(local.ecs_chapter_tags, { Name = "hello-world-service" })
-}
+#   # we do not need an LB, the service is expected to produce stdout "hello world" only
+#   # load_balancer {
+#   #   target_group_arn = var.alb_tg_arn
+#   #   container_name   = "cb-task"
+#   #   container_port   = 80
+#   # }
+#   tags = merge(local.ecs_chapter_tags, { Name = "hello-world-service" })
+# }
+
+#resource "aws_ecs_shceduled_task"
