@@ -24,6 +24,8 @@ resource "aws_ecs_cluster" "main" {
     value = "enabled"
   }
 
+
+
   configuration {
     execute_command_configuration {
       kms_key_id = var.kms_key_arn
@@ -58,19 +60,19 @@ resource "aws_ecs_task_definition" "cb-task-hw" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   # for valid values see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  cpu                      = 256
-  memory                   = 512
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  cpu                = 256
+  memory             = 512
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
       name      = "cb-task"
-      image     = "hello-world"
+      image     = "docker.io/library/hello-world:latest"
       essential = true
       logConfiguration = {
         logDriver = "awslogs",
-        options= {
-          awslogs-group = var.log_group_name,
-          awslogs-region = var.main_deployment_region,
+        options = {
+          awslogs-group         = var.log_group_name,
+          awslogs-region        = var.main_deployment_region,
           awslogs-stream-prefix = "ecs"
         }
       }
@@ -108,7 +110,7 @@ resource "aws_ecs_service" "cb-service-hw" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "role-name"
+  name = "ecs_task_execution_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

@@ -10,6 +10,6 @@ output "ecs_service_subnet_ids" {
 
 output "ecs_service_security_group_ids" {
   description = "Defined security groups ids list"
-  #value = aws_default_security_group.vpc-01-sg
-  value       = [aws_default_security_group.vpc-01-sg.id]
+  #value = aws_default_security_group.vpc-01-sg-01
+  value = [aws_security_group.vpc-01-sg-01.id]
 }

@@ -73,3 +73,17 @@ You must be able to run docker compose.
   - Got it, it required a bit of navigation
 - Have an error after adding the internet gateway: log group is not accessible. I need to see what permission is missing.
 - Spent time understanding permissions. Now containers are sending towards the correct log group, but they can't create the log stream
+
+#### 2024-01-02
+
+- Resuming from where I left - need to have the container's log visible in cloud watch.
+- But first, it seems ECS cannot download the image. Must resolve this first.
+  - Hint received from the CloudWatch logs of the network. I saw dropped packages, therefore it was about a security group.
+  - It seems that ecs service receives a network config where a security group is passed. That security group must allow the outbound traffic to pull the image
+
+
+## Prepare KT
+
+1. clone the devcontainer repo
+2. link the accounts for checkov and aws
+3. execute `aws configure`
