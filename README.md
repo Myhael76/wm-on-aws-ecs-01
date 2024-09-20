@@ -89,8 +89,28 @@ You must be able to run docker compose.
 - Trying out task scheduling with EventBridge and ECS
 - After much pain I observe that the CloudTrail tool gives me the information I wanted.
 
+#### 2024-01-03
+
+- saw that Terraform has limits and does not play well with state. Having a "somewhere" local state is a problem. Cloudformation does not have this problem.
+- Begun studying how to switch. deep dive into CF / make a devcontainer for it
+
+#### 2024-01-04
+
+- Refine CF devcontainer
+- Arrange templates and explore composability
+
+#### 2024-01-05
+
+- Deep dive on how to document or present. Added mingrammer diagrams for AWS capability to the CF devcontainer.
+- Discovered [dynamic visualizations](https://bryan-kroger-edos.medium.com/dynamic-visualizations-d084703cfc0b)
+
 ## Prepare KT
 
 1. clone the devcontainer repo
 2. link the accounts for checkov and aws
 3. execute `aws configure`
+
+## Identified pain points
+
+- AWS resources are difficult to visualize. These [dynamic visualizations](https://bryan-kroger-edos.medium.com/dynamic-visualizations-d084703cfc0b) render the idea, but there are many standpoints and this project is 3+ years old and not maintained.
+

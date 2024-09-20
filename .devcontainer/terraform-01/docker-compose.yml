@@ -8,5 +8,5 @@ services:
         - __WORKSPACE_FOLDER=${WORKSPACE_FOLDER}
     volumes:
       - ../../:/${WORKSPACE_FOLDER}/
-    command: [ "sleep", "infinity" ]
+    command: [ sleep, infinity ]
     #entrypoint: "tail -f /dev/null"

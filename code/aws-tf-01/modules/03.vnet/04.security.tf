@@ -5,6 +5,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.service-vpc-01.id
   tags   = merge(local.vnet_chapter_tags, { Name = "internet gateway" })
 }
+
 # Outbound traffic will come from the public subnet towards the internet gateway
 resource "aws_route_table" "public_egress" {
   vpc_id = aws_vpc.service-vpc-01.id
